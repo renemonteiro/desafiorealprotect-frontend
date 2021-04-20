@@ -2,6 +2,7 @@ import React,{useState} from "react"
 import styled from 'styled-components'
 import axios from 'axios'
 import {upper} from "../utils"
+import { Button, FormHelperText, InputLabel, TextField } from "@material-ui/core"
 
 
 const MainContainer = styled.div`
@@ -52,16 +53,23 @@ const ContainerButton = styled.div`
 display:flex;
 flex-direction:row;
 `
+const Form = styled.form`
+display:flex;
+justify-content:center;
+
+`
+
 export default function GetByMonth() {
     const [inputText,setText] = useState("")
     const [inputPage, setPage] = useState(1)
     const [inputNameColumn, setNameColumn] = useState('')
-    const [inputOrder,setOrder] = useState("asc")
-    const [inputLimit, setLimit] = useState(50)
+    const [inputOrder,setOrder] = useState("")
+    const [inputLimit, setLimit] = useState()
     const [result, setResult] = useState([])
 
 
     const getListsByMonth = ()=>{
+       
         const formatText = upper(inputText)
        
         const text = formatText
@@ -76,8 +84,14 @@ export default function GetByMonth() {
             setResult(response.data.result)
         })
         .catch((error)=>{
-            console.log(error)
+            console.log(error.response.data.message)
         })
+    }
+
+    const print = (event) =>{
+        event.preventDefault()
+        console.log(inputText)
+        getListsByMonth()
     }
 
 
@@ -103,7 +117,7 @@ export default function GetByMonth() {
     <MainContainer>
         <ContainerHeader>
 
-            <ContainerFilter>
+            {/* <ContainerFilter>
                     
                 <InputText onChange ={(e)=>{setText(e.target.value)}} placeholder="Month"/>
                 <InputOrder onChange ={(e)=>{setNameColumn(e.target.value)}} placeholder=" 'hour' or 'day' "/>
@@ -112,7 +126,24 @@ export default function GetByMonth() {
                 <InputButton  onClick={()=> getListsByMonth()}>Search</InputButton> 
                 <InputButton  onClick={()=> clear()}>Clear</InputButton> 
                     
-            </ContainerFilter>            
+            </ContainerFilter>             */}
+            <Form  onSubmit={print} >
+               
+               <TextField required id="standard" label="text" autoFocus  onChange={ e=>setText(e.target.value)} />
+               
+               
+               <TextField  required id="standard-basic" label="column"  onChange={ e=>setNameColumn(e.target.value)}/>
+               
+               
+               <TextField  required id="standard-basic" label="order"  onChange={ e=>setOrder(e.target.value)}/>
+               
+               <TextField   id="standard-basic" label="limit"  onChange={ e=>setLimit(e.target.value)}/>
+                
+                <Button type="submit" variant="contained" color="secondary">
+                    Secondary
+                </Button>
+               
+           </Form>
             
         </ContainerHeader>
        
